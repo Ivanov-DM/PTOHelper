@@ -1,4 +1,4 @@
-package ru.ivanov.PTO-Helper;
+package ru.ivanov.pto_helper;
 
 import static org.junit.Assert.assertTrue;
 

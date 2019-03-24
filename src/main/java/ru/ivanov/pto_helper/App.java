@@ -1,4 +1,4 @@
-package ru.ivanov.PTO-Helper;
+package ru.ivanov.pto_helper;
 
 /**
  * Hello world!
