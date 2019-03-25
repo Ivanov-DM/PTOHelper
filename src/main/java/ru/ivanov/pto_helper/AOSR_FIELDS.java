@@ -1,6 +1,7 @@
 package ru.ivanov.pto_helper;
 
 public enum AOSR_FIELDS {
+    EXCEL_NUM(0, 0),
     NUM_AOSR(30, 0),                                   //                      № акта
     DEW(5, 0),                                         // DAY OF END WORK      день окончания работ
     MEW(12, 0),                                        // MONTH OF END WORK    месяц окончания работ
