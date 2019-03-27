@@ -1,6 +1,11 @@
 package ru.ivanov.pto_helper;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+
 public class AOSRContent {
+    private LinkedHashMap<String, ArrayList<String>> aosrContent;
+    private AOSR_FIELDS fields;
     private int EXCEL_NUM;                  //1
     private String NUM_AOSR;                //2
     private String DEW;                     //3 DAY OF END WORK      день окончания работ
@@ -35,10 +40,16 @@ public class AOSRContent {
         this.NTD_AND_PROJECT = NTD_AND_PROJECT;
         this.NEXT_WORK = NEXT_WORK;
         this.ATTACHMENT = ATTACHMENT;
+
     }
 
     AOSRContent() {
 
+    }
+
+    public void createAOSR (String key, ArrayList<String> text) {
+        aosrContent = new LinkedHashMap<>();
+        aosrContent.put(key, text);
     }
 
     public int getEXCEL_NUM() {
