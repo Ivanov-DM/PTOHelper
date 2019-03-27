@@ -17,17 +17,12 @@ public enum AOSR_FIELDS {
     NEXT_WORK(71, 126),              //                      наименование последующих работ
     ATTACHMENT(126, 0);                                //                      приложение
 
-    private int rowLenght;
     private int firstRowLength;
     private int nextRowLength;
 
     AOSR_FIELDS(int firstRowLength, int nextRowLength) {
         this.firstRowLength = firstRowLength;
         this.nextRowLength = nextRowLength;
-    }
-
-    public int getRowLenght() {
-        return rowLenght;
     }
 
     public int getFirstRowLength() {
