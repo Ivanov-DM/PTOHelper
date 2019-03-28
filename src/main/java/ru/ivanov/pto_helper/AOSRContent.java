@@ -2,12 +2,14 @@ package ru.ivanov.pto_helper;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class AOSRContent {
     private LinkedHashMap<String, ArrayList<String>> aosrContent;
     protected int aosrNum;
-    private AOSR_FIELDS fields;
-    private boolean isReady;
+    protected boolean isReady;
+    static int countString;
+    static int countInteger;
 //    private int EXCEL_NUM;                  //1
 //    private String NUM_AOSR;                //2
 //    private String DEW;                     //3 DAY OF END WORK      день окончания работ
@@ -28,7 +30,7 @@ public class AOSRContent {
         return aosrContent;
     }
 
-    public boolean isReady() {
+    public boolean getReady() {
         return isReady;
     }
 
@@ -38,16 +40,59 @@ public class AOSRContent {
         isReady = false;
     }
 
-    public void putValue(String key, ArrayList<String> text) {
-        aosrContent = new LinkedHashMap<>();
-        aosrContent.put(key, text);
-    }
+//    public void putValue(String key, String text) {
+//        aosrContent = new LinkedHashMap<>();
+//        aosrContent.put(key, getStringArr(text, key));
+//    }
 
     private void initMap() {
         aosrContent = new LinkedHashMap<>(32);
-        for (AOSR_FIELDS fields : AOSR_FIELDS.values()) {
-            aosrContent.put(fields.toString(), new ArrayList<String>(1000));
-        }
+//        for (AOSR_FIELDS fields : AOSR_FIELDS.values()) {
+//            aosrContent.put(fields.toString(), new ArrayList<String>(32));
+//        }
     }
 
+    public void addValue(double value, String key) {
+//        String str = String.valueOf((int) value);
+//        putValue(str, key);
+//        countInteger++;
+//        System.out.println("CountInteger = " + countInteger + " " + key + "CONTENT: " + value);
+    }
+
+    public void addValue(String value, String key) {
+//        putValue(value, key);
+//        countString++;
+//        System.out.println("CountString = " + countString + " " + key + "CONTENT: " + value);
+    }
+
+    private void putValue(String text, String key) {
+        ArrayList<String> resultStringArray = new ArrayList<>();
+        StringBuffer strB = new StringBuffer();
+        String[] arrStringLine = text.split(" ");
+        String currentWord = arrStringLine[0];
+        String endOfLineWord = null;
+        for (AOSR_FIELDS fields : AOSR_FIELDS.values()) {
+            String str = fields.toString();
+            int maxLineSize = fields.getFirstRowLength();
+            if (str.equals(key)) {
+                for (int i = 1; i < arrStringLine.length; i++) {
+                    strB.append(currentWord + " ");
+                    if (strB.length() < maxLineSize) {
+                        currentWord = arrStringLine[i];
+                        endOfLineWord = currentWord;
+                    } else {
+                        maxLineSize = fields.getNextRowLength();
+                        strB.delete(strB.length() - endOfLineWord.length() - 1, strB.length());
+                        resultStringArray.add(strB.toString());
+                        strB.setLength(0);
+                        i--;
+                    }
+
+                }
+                strB.append(currentWord);
+                resultStringArray.add(strB.toString());
+            }
+            aosrContent.put(str, resultStringArray);
+        }
+    }
 }

@@ -1,53 +1,87 @@
 package ru.ivanov.pto_helper;
 
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class ExcelParser {
     XSSFWorkbook book;
-    AOSRContent aosrContent;
+    FileInputStream in;
+    LinkedHashMap<AOSR_FIELDS, Integer> mapFieldsColumns;
 
     public ExcelParser(String fileName) throws IOException {
-        book = ExcelParser.createBook(fileName);
+        in = new FileInputStream(new File(fileName));
+        book = new XSSFWorkbook(in);
+        mapFieldsColumns = new LinkedHashMap<>();
+        initExcelFie();
     }
 
-    public AOSRContent createAOSR(int numRow) {
-        XSSFSheet sheet = book.getSheet("OGR");
-        XSSFRow currentRow = sheet.getRow(numRow + 2);
-        AOSRContent aosrContent = new AOSRContent();
-//        aosrContent.setEXCEL_NUM(Integer.parseInt(currentRow.getCell(0).getStringCellValue()));
-//        aosrContent.setNUM_AOSR(currentRow.getCell(1).getStringCellValue());
-//        aosrContent.setDEW(currentRow.getCell(2).getStringCellValue());
-//        aosrContent.setMEW(currentRow.getCell(3).getStringCellValue());
-//        aosrContent.setYEW(currentRow.getCell(4).getStringCellValue());
-//        aosrContent.setWORK_TYPE(currentRow.getCell(5).getStringCellValue());
-//        aosrContent.setPROJECT_DATA(currentRow.getCell(6).getStringCellValue());
-//        aosrContent.setMATERIAL_DATA(currentRow.getCell(7).getStringCellValue());
-//        aosrContent.setDRAWING_AND_RESULTS(currentRow.getCell(8).getStringCellValue());
-//        aosrContent.setDSW(currentRow.getCell(9).getStringCellValue());
-//        aosrContent.setMSW(currentRow.getCell(10).getStringCellValue());
-//        aosrContent.setYSW(currentRow.getCell(11).getStringCellValue());
-//        aosrContent.setNTD_AND_PROJECT(currentRow.getCell(12).getStringCellValue());
-//        aosrContent.setNEXT_WORK(currentRow.getCell(13).getStringCellValue());
-//        aosrContent.setATTACHMENT(currentRow.getCell(14).getStringCellValue());
-        return aosrContent;
+    // составление map, где key = поле класса AOSRContent, value = номер столбца +
+    public void initExcelFie() {
+        XSSFSheet sheet = book.getSheetAt(0);
+        Iterator<Row> rowIterator = sheet.rowIterator();
+        while(rowIterator.hasNext()) {
+            Row row = rowIterator.next();
+            Iterator<Cell> cellIterator = row.cellIterator();
+            while(cellIterator.hasNext()) {
+                Cell cell = cellIterator.next();
+                if (cell.getCellType() == CellType.STRING) {
+                    for (AOSR_FIELDS fields : AOSR_FIELDS.values()) {
+                        String str = fields.toString();
+                        if (str.equals(cell.getStringCellValue())) {
+                            mapFieldsColumns.put(fields, cell.getColumnIndex());
+                        }
+                    }
+                }
+            }
+        }
     }
 
-    public void aosrContentInfo(AOSRContent aosr) {
-//        System.out.println(aosr.getATTACHMENT() + aosr.getMATERIAL_DATA());
-    }
-
-
-
-    private static XSSFWorkbook createBook(String fileName) throws IOException {
-        FileInputStream in = new FileInputStream(new File(fileName));
-        XSSFWorkbook book = new XSSFWorkbook(in);
-        return book;
+    // возвращает список объектов класса AOSRContent (только тех, которые в excel файле имеют статус ЛОЖЬ в графе isEmpty)
+    public ArrayList<AOSRContent> getAOSRContentList() {
+        ArrayList<AOSRContent> aosrContentList = new ArrayList<>(32);
+        boolean aosrIsReady = false;
+        XSSFSheet sheet = book.getSheetAt(0);
+        Iterator<Row> rowIterator = sheet.rowIterator();
+        while(rowIterator.hasNext()) {
+            Row row = rowIterator.next();
+            if (row.getRowNum() > 2) {
+                Iterator<Cell> cellIterator = row.cellIterator();
+                AOSRContent aosrContent = new AOSRContent();
+                while (cellIterator.hasNext()) {
+                    Cell cell = cellIterator.next();
+                    if (cell.getCellType() == CellType.FORMULA) {
+                        aosrIsReady = !cell.getBooleanCellValue(); //отрицание потому то в Excel файле если данные для акта готовы то ЛОЖЬ
+                        if (aosrIsReady) {
+                            aosrContent.isReady = aosrIsReady;
+                        }
+                    }
+                    if (aosrIsReady) {
+                        if (cell.getCellType() == CellType.STRING) {
+                            for (Map.Entry entry : mapFieldsColumns.entrySet()) {
+                                int numColumn = (int) entry.getValue();
+                                if (cell.getColumnIndex() == numColumn) {
+                                    aosrContent.addValue(cell.getStringCellValue(), entry.getKey().toString());
+                                }
+                            }
+                        } else if (cell.getCellType() == CellType.NUMERIC) {
+                            for (Map.Entry entry : mapFieldsColumns.entrySet()) {
+                                int numColumn = (int) entry.getValue();
+                                if (cell.getColumnIndex() == numColumn) {
+                                    aosrContent.addValue(cell.getNumericCellValue(), entry.getKey().toString());
+                                }
+                            }
+                        }
+                    }
+                }
+                aosrContentList.add(aosrContent);
+            }
+        }
+        return aosrContentList;
     }
 }
