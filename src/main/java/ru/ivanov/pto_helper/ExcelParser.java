@@ -59,6 +59,7 @@ public class ExcelParser {
                         aosrIsReady = !cell.getBooleanCellValue(); //отрицание потому то в Excel файле если данные для акта готовы то ЛОЖЬ
                         if (aosrIsReady) {
                             aosrContent.isReady = aosrIsReady;
+                            continue;
                         }
                     }
                     if (aosrIsReady) {
@@ -67,13 +68,19 @@ public class ExcelParser {
                                 int numColumn = (int) entry.getValue();
                                 if (cell.getColumnIndex() == numColumn) {
                                     aosrContent.addValue(cell.getStringCellValue(), entry.getKey().toString());
+                                    break;
                                 }
                             }
                         } else if (cell.getCellType() == CellType.NUMERIC) {
                             for (Map.Entry entry : mapFieldsColumns.entrySet()) {
                                 int numColumn = (int) entry.getValue();
                                 if (cell.getColumnIndex() == numColumn) {
+                                    if (numColumn == 1) {
+                                        int num = (int) cell.getNumericCellValue();
+                                        aosrContent.aosrNum = num;
+                                    }
                                     aosrContent.addValue(cell.getNumericCellValue(), entry.getKey().toString());
+                                    break;
                                 }
                             }
                         }

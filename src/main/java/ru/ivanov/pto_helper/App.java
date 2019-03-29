@@ -32,7 +32,14 @@ public class App {
         for (int i = 0; i < aosrContenList.size(); i++) {
             AOSRContent aosrContent = aosrContenList.get(i);
             if (aosrContent.isReady) {
-                System.out.println(i);
+                LinkedHashMap<String, ArrayList<String>> map = aosrContent.getAosrContent();
+                for (Map.Entry<String, ArrayList<String>> entry : map.entrySet()) {
+                    System.out.println("Field = " + entry.getKey());
+                    ArrayList<String> arr = entry.getValue();
+                    for (int j = 0; j < arr.size(); j++) {
+                        System.out.println("Value " + j + " = " + arr.get(j));
+                    }
+                }
             }
         }
 
@@ -118,4 +125,7 @@ public class App {
 //
 //        }
     }
+
+
+
 }

@@ -9,13 +9,13 @@ public enum AOSR_FIELDS {
     WORK_TYPE(64, 126),              //                      наименование работ
     PROJECT_DATA(71, 126),           //                      наименование проекта
     MATERIAL_DATA(84, 126),          //                      наименование применяемых материалов
-    DRAWING_AND_RESULTS(126, 0),                       //                      исполнительные чертежи и результаты испытаний
+    DRAWING_AND_RESULTS(126, 126),                       //                      исполнительные чертежи и результаты испытаний
     DSW(5, 0),                                         // DAY OF START WORK    день начал работ
     MSW(12, 0),                                        // MONTH OF START WORK  месяц начал работ
     YSW(5, 0),                                         // YEAR OF START WORK   год начала работ
     NTD_AND_PROJECT(84, 126),        //                      наименование НТД и РД
     NEXT_WORK(71, 126),              //                      наименование последующих работ
-    ATTACHMENT(126, 0);                                //                      приложение
+    ATTACHMENT(126, 126);                                //                      приложение
 
     private int firstRowLength;
     private int nextRowLength;
