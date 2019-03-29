@@ -29,6 +29,12 @@ public class App {
     public static void main( String[] args ) throws IOException {
         ExcelParser excelParser = new ExcelParser(EXCEL_FILE_NAME);
         ArrayList<AOSRContent> aosrContenList = excelParser.getAOSRContentList();
+
+        WordProcessor wordProcessor = new WordProcessor();
+        wordProcessor.setTemplateFilePath(TEMPLANE_FILE_NAME);
+        wordProcessor.createAOSR(5, PATH_TO_SAVE);
+
+        //Посмотреть содержимое aosrContentList
         for (int i = 0; i < aosrContenList.size(); i++) {
             AOSRContent aosrContent = aosrContenList.get(i);
             if (aosrContent.isReady) {
@@ -42,5 +48,7 @@ public class App {
                 }
             }
         }
+        // -------------------------------------
+
     }
 }
