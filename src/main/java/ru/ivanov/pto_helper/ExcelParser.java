@@ -72,15 +72,17 @@ public class ExcelParser {
                                 }
                             }
                         } else if (cell.getCellType() == CellType.NUMERIC) {
-                            for (Map.Entry entry : mapFieldsColumns.entrySet()) {
-                                int numColumn = (int) entry.getValue();
-                                if (cell.getColumnIndex() == numColumn) {
-                                    if (numColumn == 1) {
-                                        int num = (int) cell.getNumericCellValue();
-                                        aosrContent.aosrNum = num;
+                            int cellColumnNum = cell.getColumnIndex();
+                            if (cellColumnNum == 1) {
+                                int num = (int) cell.getNumericCellValue();
+                                aosrContent.aosrNum = num;
+                            } else {
+                                for (Map.Entry entry : mapFieldsColumns.entrySet()) {
+                                    int numColumn = (int) entry.getValue();
+                                    if (cell.getColumnIndex() == numColumn) {
+                                        aosrContent.addValue(cell.getNumericCellValue(), entry.getKey().toString());
+                                        break;
                                     }
-                                    aosrContent.addValue(cell.getNumericCellValue(), entry.getKey().toString());
-                                    break;
                                 }
                             }
                         }
