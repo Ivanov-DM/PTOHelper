@@ -65,7 +65,7 @@ public class ExcelParser {
                             for (Map.Entry entry : mapFieldsColumns.entrySet()) {
                                 int numColumn = (int) entry.getValue();
                                 if (cell.getColumnIndex() == numColumn) {
-                                    aosrContent.addValue(cell.getStringCellValue(), entry.getKey().toString());
+                                    aosrContent.addValue(cell.getStringCellValue(), (AOSR_FIELDS) entry.getKey());
                                     break;
                                 }
                             }
@@ -78,7 +78,7 @@ public class ExcelParser {
                                 for (Map.Entry entry : mapFieldsColumns.entrySet()) {
                                     int numColumn = (int) entry.getValue();
                                     if (cell.getColumnIndex() == numColumn) {
-                                        aosrContent.addValue(cell.getNumericCellValue(), entry.getKey().toString());
+                                        aosrContent.addValue(cell.getNumericCellValue(), (AOSR_FIELDS) entry.getKey());
                                         break;
                                     }
                                 }

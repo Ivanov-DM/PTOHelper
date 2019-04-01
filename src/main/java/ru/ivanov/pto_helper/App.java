@@ -36,21 +36,23 @@ public class App {
         // данных AOSRContent, который получаем в результате чтения ExcelParser файла Excel
         WordProcessor wordProcessor = new WordProcessor(TEMPLANE_FILE_NAME, excelParser.getAOSRContentList());
 
-        System.out.println(wordProcessor.mapCellAndRowFields.size());
-        for (Map.Entry<AOSR_FIELDS, ArrayList<WordProcessor.DocumentTableCell>> entry : wordProcessor.mapCellAndRowFields.entrySet()) {
-            System.out.println("Field = " + entry.getKey());
-            ArrayList<WordProcessor.DocumentTableCell> arrCell = entry.getValue();
-            System.out.println("Num of cell = " + arrCell.size());
-            for (int i = 0; i < arrCell.size(); i++) {
-                int row = arrCell.get(i).getRow();
-                int cell = arrCell.get(i).getCell();
-                System.out.println("Cell #" + i + ": row = " + row + ", cell = " + cell);
-            }
-        }
+
+//        // Посмотреть содержимое mapCellAndRowFields в WordProcessor
+//        System.out.println(wordProcessor.mapCellAndRowFields.size());
+//        for (Map.Entry<AOSR_FIELDS, ArrayList<WordProcessor.DocumentTableCell>> entry : wordProcessor.mapCellAndRowFields.entrySet()) {
+//            System.out.println("Field = " + entry.getKey());
+//            ArrayList<WordProcessor.DocumentTableCell> arrCell = entry.getValue();
+//            System.out.println("Num of cell = " + arrCell.size());
+//            for (int i = 0; i < arrCell.size(); i++) {
+//                int row = arrCell.get(i).getRow();
+//                int cell = arrCell.get(i).getCell();
+//                System.out.println("Cell #" + i + ": row = " + row + ", cell = " + cell);
+//            }
+//        }
 
 //        wordProcessor.setTemplateFilePath(TEMPLANE_FILE_NAME);
 
-//        wordProcessor.createAOSR(1, 1);
+        wordProcessor.createAOSR(0, 6);
 
         //Посмотреть содержимое aosrContentList
 //        ArrayList<AOSRContent> aosrContenList = excelParser.getAOSRContentList();

@@ -5,11 +5,11 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class AOSRContent {
-    private LinkedHashMap<String, ArrayList<String>> aosrContentMap;
+    private LinkedHashMap<AOSR_FIELDS, ArrayList<String>> aosrContentMap;
     protected int aosrNum;
     protected boolean isReady;
 
-    public LinkedHashMap<String, ArrayList<String>> getAosrContentMap() {
+    public LinkedHashMap<AOSR_FIELDS, ArrayList<String>> getAosrContentMap() {
         return aosrContentMap;
     }
 
@@ -27,24 +27,23 @@ public class AOSRContent {
         aosrContentMap = new LinkedHashMap<>(32);
     }
 
-    public void addValue(double value, String key) {
+    public void addValue(double value, AOSR_FIELDS field) {
         String str = String.valueOf((int) value);
-        putValue(str, key);
+        putValue(str, field);
     }
 
-    public void addValue(String value, String key) {
-        putValue(value, key);
+    public void addValue(String value, AOSR_FIELDS field) {
+        putValue(value, field);
     }
 
     //
-    private void putValue(String text, String key) {
+    private void putValue(String text, AOSR_FIELDS field) {
         ArrayList<String> resultStringArray = new ArrayList<>();
         for (AOSR_FIELDS fields : AOSR_FIELDS.values()) {
-            String str = fields.toString();
-            if (str.equals(key)) {
+            if (fields == field) {
                 if (fields.getNextRowLength() == 0) {
                     resultStringArray.add(text);
-                    aosrContentMap.put(str, resultStringArray);
+                    aosrContentMap.put(field, resultStringArray);
                     break;
                 } else {
                     StringBuffer strB = new StringBuffer();
@@ -52,7 +51,7 @@ public class AOSRContent {
                     String currentWord = arrStringLine[0];
                     String endOfLineWord = null;
                     int maxLineSize = fields.getFirstRowLength();
-                    if (str.equals(key)) {
+                    if (fields == field) {
                         for (int i = 1; i < arrStringLine.length; i++) {
                             strB.append(currentWord + " ");
                             if (strB.length() < maxLineSize) {
@@ -70,7 +69,7 @@ public class AOSRContent {
                         strB.append(currentWord);
                         resultStringArray.add(strB.toString());
                     }
-                    aosrContentMap.put(str, resultStringArray);
+                    aosrContentMap.put(field, resultStringArray);
                     break;
                 }
             }
@@ -79,8 +78,8 @@ public class AOSRContent {
 
     public String getAOSRNum() {
         String aosrNum = null;
-        for (Map.Entry<String, ArrayList<String>> entry : aosrContentMap.entrySet()) {
-            if (AOSR_FIELDS.NUM_AOSR.toString() == entry.getKey()){
+        for (Map.Entry<AOSR_FIELDS, ArrayList<String>> entry : aosrContentMap.entrySet()) {
+            if (AOSR_FIELDS.NUM_AOSR == entry.getKey()){
                 aosrNum = entry.getValue().get(0);
                 return aosrNum;
             }

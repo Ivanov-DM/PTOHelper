@@ -31,28 +31,11 @@ public class WordProcessor {
         initMapCellAndRowFields();
     }
 
+    // создаем готовый АОСР
     public void createAOSR(int from, int to) throws IOException, InvalidFormatException {
-
         for (int i = from; i <= to; i++) {
             AOSRContent aosrContent = aosrContenList.get(i);
-
             fillAOSR(aosrContent);
-//            LinkedHashMap<String, ArrayList<String>> map = aosrContent.getAosrContentMap();
-//            for (Map.Entry<String, ArrayList<String>> entry : map.entrySet()) {
-//                System.out.println("Field = " + entry.getKey());
-//                ArrayList<String> arr = entry.getValue();
-//                for (int j = 0; j < arr.size(); j++) {
-//                    System.out.println("Value " + j + " = " + arr.get(j));
-//                }
-//            }
-
-
-
-
-
-
-
-
             String aosrNum = correctFileName(aosrContent.getAOSRNum());
             String outFilePath = "AOSR_" + aosrNum + ".docx";
             out = new FileOutputStream(outFilePath);
@@ -92,23 +75,69 @@ public class WordProcessor {
         }
     }
 
+    // заполняем шаблонный файл АОСР данными из объекта AOSRContent
     private void fillAOSR(AOSRContent aosrContent) {
+        LinkedHashMap<AOSR_FIELDS, ArrayList<String>> aosrContentMap = aosrContent.getAosrContentMap();
+        for (AOSR_FIELDS fieldAOSRContent : aosrContentMap.keySet()) {
+            for (AOSR_FIELDS fieldTemplateFile : mapCellAndRowFields.keySet()) {
+                if (fieldAOSRContent == fieldTemplateFile) {
+                    ArrayList<String> aosrContentListForField = aosrContentMap.get(fieldAOSRContent);
+                    int sizeAOSRContentListForField = aosrContentListForField.size();
+                    ArrayList<DocumentTableCell> tableCellListForField = mapCellAndRowFields.get(fieldTemplateFile);
+                    int numTableCellForField = tableCellListForField.size();
+                    String replacementText;
+                    String replacementTextEnd = "";
+                    if (numTableCellForField < sizeAOSRContentListForField) {
+                        System.out.println("Не помещается");
+                    } else {
+                        for (int i = 0; i < numTableCellForField ; i++) {
+                            DocumentTableCell currenttableCell = tableCellListForField.get(i);
+                            if (i < sizeAOSRContentListForField) {
+                                replacementText = aosrContentListForField.get(i);
+                                replacementTextEnd = replacementText;
+                            } else if (fieldTemplateFile == AOSR_FIELDS.DEW || fieldTemplateFile == AOSR_FIELDS.MEW || fieldTemplateFile == AOSR_FIELDS.YEW){
+                                replacementText = replacementTextEnd;
+                            } else {
+                                replacementText = "";
+                            }
+                            replaceText(currenttableCell, replacementText);
+                        }
+                    }
+                }
+
+            }
+        }
     }
 
     public void setTemplateFilePath(String templaneFilePath) {
     }
 
     // метод по замене содержимого ячейкм таблицы в файле Word
-    public boolean replaceText(XWPFRun run, String word, String value) {
-        String currentText = run.getText(0);
-        if (currentText != null && currentText.contains(word)) {
-            currentText = currentText.replace(word, value);
-            run.setText(currentText, 0);
-            return true;
-        } else {
-            return false;
+    public void replaceText(DocumentTableCell tableCell, String replacementVelue) {
+        for (XWPFTable table : document.getTables()) {
+            XWPFTableCell cell = table.getRow(tableCell.getRow()).getCell(tableCell.getCell());
+            for (XWPFParagraph paragraph : cell.getParagraphs()) {
+                for (XWPFRun run : paragraph.getRuns()) {
+                    String currentText = run.getText(0);
+                    if (currentText != null) {
+                        currentText = currentText.replace(currentText, replacementVelue);
+                        run.setText(currentText, 0);
+                    }
+                }
+            }
         }
     }
+
+
+//        String currentText = run.getText(0);
+//        if (currentText != null && currentText.contains(word)) {
+//            currentText = currentText.replace(word, value);
+//            run.setText(currentText, 0);
+//            return true;
+//        } else {
+//            return false;
+//        }
+//    }
 
     //изменение запрещенных для использования в имени Файла или каталога символов для Windows на символ _
     private String correctFileName(String name) {
