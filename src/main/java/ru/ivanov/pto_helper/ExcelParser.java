@@ -16,11 +16,11 @@ public class ExcelParser {
         in = new FileInputStream(new File(fileName));
         book = new XSSFWorkbook(in);
         mapFieldsColumns = new LinkedHashMap<>();
-        initExcelFie();
+        initExcelFile();
     }
 
     // составление map, где key = поле класса AOSRContent, value = номер столбца +
-    public void initExcelFie() {
+    private void initExcelFile() {
         XSSFSheet sheet = book.getSheetAt(0);
         Iterator<Row> rowIterator = sheet.rowIterator();
         while(rowIterator.hasNext()) {

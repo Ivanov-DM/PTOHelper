@@ -2,14 +2,15 @@ package ru.ivanov.pto_helper;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class AOSRContent {
-    private LinkedHashMap<String, ArrayList<String>> aosrContent;
+    private LinkedHashMap<String, ArrayList<String>> aosrContentMap;
     protected int aosrNum;
     protected boolean isReady;
 
-    public LinkedHashMap<String, ArrayList<String>> getAosrContent() {
-        return aosrContent;
+    public LinkedHashMap<String, ArrayList<String>> getAosrContentMap() {
+        return aosrContentMap;
     }
 
     public boolean getReady() {
@@ -23,7 +24,7 @@ public class AOSRContent {
     }
 
     private void initMap() {
-        aosrContent = new LinkedHashMap<>(32);
+        aosrContentMap = new LinkedHashMap<>(32);
     }
 
     public void addValue(double value, String key) {
@@ -35,6 +36,7 @@ public class AOSRContent {
         putValue(value, key);
     }
 
+    //
     private void putValue(String text, String key) {
         ArrayList<String> resultStringArray = new ArrayList<>();
         for (AOSR_FIELDS fields : AOSR_FIELDS.values()) {
@@ -42,7 +44,7 @@ public class AOSRContent {
             if (str.equals(key)) {
                 if (fields.getNextRowLength() == 0) {
                     resultStringArray.add(text);
-                    aosrContent.put(str, resultStringArray);
+                    aosrContentMap.put(str, resultStringArray);
                     break;
                 } else {
                     StringBuffer strB = new StringBuffer();
@@ -68,10 +70,21 @@ public class AOSRContent {
                         strB.append(currentWord);
                         resultStringArray.add(strB.toString());
                     }
-                    aosrContent.put(str, resultStringArray);
+                    aosrContentMap.put(str, resultStringArray);
                     break;
                 }
             }
         }
+    }
+
+    public String getAOSRNum() {
+        String aosrNum = null;
+        for (Map.Entry<String, ArrayList<String>> entry : aosrContentMap.entrySet()) {
+            if (AOSR_FIELDS.NUM_AOSR.toString() == entry.getKey()){
+                aosrNum = entry.getValue().get(0);
+                return aosrNum;
+            }
+        }
+        return aosrNum;
     }
 }
