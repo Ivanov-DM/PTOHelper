@@ -120,6 +120,9 @@ public class WordProcessor {
                 for (XWPFRun run : paragraph.getRuns()) {
                     String currentText = run.getText(0);
                     if (currentText != null) {
+                        if(replacementVelue.equals("пусто")|| replacementVelue.equals("Пусто")) {
+                            replacementVelue = "";
+                        }
                         currentText = currentText.replace(currentText, replacementVelue);
                         run.setText(currentText, 0);
                     }

@@ -32,8 +32,82 @@ public class AOSRContent {
         putValue(str, field);
     }
 
+    public void addValue(String material_dataValue, String drawing_and_resultsValue, AOSR_FIELDS field) {
+        String attachment = createAttachment(material_dataValue, drawing_and_resultsValue);
+        putValue(attachment, field);
+    }
+
     public void addValue(String value, AOSR_FIELDS field) {
         putValue(value, field);
+    }
+
+    private String createAttachment(String material_dataValue, String drawing_and_resultsValue) {
+        int counter = 0;
+        boolean isNext = false;
+        StringBuffer builderMaterial = new StringBuffer();
+        StringBuffer builderDrawing = new StringBuffer();
+        StringBuffer attachmentBuilder = new StringBuffer();
+        String[] materialSplit = material_dataValue.split(" ");
+        String[] drawingSplit = drawing_and_resultsValue.split(" ");
+        for (int i = 0; i < materialSplit.length; i++) {
+            String str = materialSplit[i];
+            if (!isNext) {
+                for (ATTACH_CONST field : ATTACH_CONST.values()) {
+                    String testWord = str.toLowerCase();
+                    if (testWord.equals(field.toString())) {
+                        counter++;
+                        builderMaterial.append(counter + "." + firstUpperCase(str));
+                        isNext = true;
+                        break;
+                    }
+                }
+            } else {
+                builderMaterial.append(" " + str);
+                if (str.endsWith(",") || i == materialSplit.length - 1) {
+                    isNext = false;
+                    attachmentBuilder.append(builderMaterial.toString());
+                    attachmentBuilder.append(" ");
+//                    System.out.println(builderMaterial);
+                    builderMaterial.setLength(0);
+                }
+            }
+        }
+
+        isNext = true;
+        counter++;
+        builderDrawing.append(counter + "." + drawingSplit[0]);
+        String nextStr = "";
+        for (int i = 1; i < drawingSplit.length; i++) {
+            if (!(i == drawingSplit.length - 1)) {
+                nextStr = drawingSplit[i + 1];
+            } else {
+                nextStr = "";
+            }
+            String str = drawingSplit[i];
+            if (isNext) {
+                builderDrawing.append(" " + str);
+                if (str.endsWith(",") || nextStr.isEmpty()) {
+                    if (!nextStr.startsWith("№")) {
+                        isNext = false;
+//                        System.out.println(builderDrawing);
+                        attachmentBuilder.append(builderDrawing.toString());
+                        attachmentBuilder.append(" ");
+                        builderDrawing.setLength(0);
+                    }
+                }
+            } else {
+                isNext = true;
+                counter++;
+                builderDrawing.append(counter + "." + firstUpperCase(str));
+            }
+        }
+        return attachmentBuilder.toString();
+    }
+
+
+    public String firstUpperCase(String word){
+        if(word == null || word.isEmpty()) return "";
+        return word.substring(0, 1).toUpperCase() + word.substring(1);
     }
 
     //
@@ -85,5 +159,15 @@ public class AOSRContent {
             }
         }
         return aosrNum;
+    }
+
+    private String[] cleanStringArr(String[] arr) {
+        ArrayList<String> cleandArr = new ArrayList<>();
+        for (String str : arr) {
+            if (!str.isEmpty()) {
+                cleandArr.add(str);
+            }
+        }
+        return (String[]) cleandArr.toArray();
     }
 }

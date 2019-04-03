@@ -34,7 +34,8 @@ public class App {
 
         //Создаем экземпляр WordProcessor и передаем ему путь к файлу Word (шаблон АОСР) и сформированный массив
         // данных AOSRContent, который получаем в результате чтения ExcelParser файла Excel
-        WordProcessor wordProcessor = new WordProcessor(TEMPLANE_FILE_NAME, excelParser.getAOSRContentList());
+        WordProcessor wordProcessor = new WordProcessor(TEMPLANE_FILE_NAME, excelParser.getAOSRContentListNew());
+
 
 
 //        // Посмотреть содержимое mapCellAndRowFields в WordProcessor
@@ -52,7 +53,7 @@ public class App {
 
 //        wordProcessor.setTemplateFilePath(TEMPLANE_FILE_NAME);
 
-        wordProcessor.createAOSR(0, 6);
+        wordProcessor.createAOSR(3, 3);
 
         //Посмотреть содержимое aosrContentList
 //        ArrayList<AOSRContent> aosrContenList = excelParser.getAOSRContentList();

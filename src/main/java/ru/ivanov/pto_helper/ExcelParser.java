@@ -91,4 +91,46 @@ public class ExcelParser {
         }
         return aosrContentList;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+    // возвращает список объектов класса AOSRContent (только тех, которые в excel файле имеют статус ЛОЖЬ в графе isEmpty)
+    public ArrayList<AOSRContent> getAOSRContentListNew() {
+        ArrayList<AOSRContent> aosrContentList = new ArrayList<>(32);
+        AOSRContentCreator aosrContentCreator = new AOSRContentCreator();
+        XSSFSheet sheet = book.getSheetAt(0);
+        Iterator<Row> rowIterator = sheet.rowIterator();
+        while(rowIterator.hasNext()) {
+            Row row = rowIterator.next();
+            if (row.getRowNum() > 2) {
+                Iterator<Cell> cellIterator = row.cellIterator();
+                while (cellIterator.hasNext()) {
+                    Cell cell = cellIterator.next();
+                    if (cell.getCellType() == CellType.FORMULA) {
+                        if (!cell.getBooleanCellValue()) {
+                            AOSRContent aosrContent = aosrContentCreator.createAOSR(row, mapFieldsColumns);
+                            aosrContentList.add(aosrContent);
+                            break;
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+        return aosrContentList;
+    }
+
+
+
+
+
 }
