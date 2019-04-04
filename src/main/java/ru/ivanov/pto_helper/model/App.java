@@ -1,21 +1,8 @@
-package ru.ivanov.pto_helper;
+package ru.ivanov.pto_helper.model;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.DataFormatter;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import javax.xml.bind.ValidationEvent;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Hello world!
@@ -53,7 +40,7 @@ public class App {
 
 //        wordProcessor.setTemplateFilePath(TEMPLANE_FILE_NAME);
 
-        wordProcessor.createAOSR(3, 3);
+//        wordProcessor.createAOSR(3, 3);
 
         //Посмотреть содержимое aosrContentList
 //        ArrayList<AOSRContent> aosrContenList = excelParser.getAOSRContentList();

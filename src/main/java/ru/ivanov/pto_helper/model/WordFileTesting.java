@@ -1,4 +1,4 @@
-package ru.ivanov.pto_helper;
+package ru.ivanov.pto_helper.model;
 
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.xwpf.model.XWPFHeaderFooterPolicy;

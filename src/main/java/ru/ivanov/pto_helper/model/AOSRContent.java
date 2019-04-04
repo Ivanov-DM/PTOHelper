@@ -1,4 +1,4 @@
-package ru.ivanov.pto_helper;
+package ru.ivanov.pto_helper.model;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -151,14 +151,31 @@ public class AOSRContent {
     }
 
     public String getAOSRNum() {
-        String aosrNum = null;
+        String aosrNum = "";
         for (Map.Entry<AOSR_FIELDS, ArrayList<String>> entry : aosrContentMap.entrySet()) {
             if (AOSR_FIELDS.NUM_AOSR == entry.getKey()){
-                aosrNum = entry.getValue().get(0);
+                ArrayList<String> arr = entry.getValue();
+                for (String o : arr) {
+                    aosrNum += o;
+                }
                 return aosrNum;
             }
         }
         return aosrNum;
+    }
+
+    public String getWorkName() {
+        String workName = "";
+        for (Map.Entry<AOSR_FIELDS, ArrayList<String>> entry : aosrContentMap.entrySet()) {
+            if (AOSR_FIELDS.WORK_TYPE == entry.getKey()){
+                ArrayList<String> arr = entry.getValue();
+                for (String o : arr) {
+                    workName += o;
+                }
+                return workName;
+            }
+        }
+        return workName;
     }
 
     private String[] cleanStringArr(String[] arr) {
@@ -170,4 +187,5 @@ public class AOSRContent {
         }
         return (String[]) cleandArr.toArray();
     }
+
 }

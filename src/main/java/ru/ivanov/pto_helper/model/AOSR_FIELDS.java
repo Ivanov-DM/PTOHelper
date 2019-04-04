@@ -1,4 +1,4 @@
-package ru.ivanov.pto_helper;
+package ru.ivanov.pto_helper.model;
 
 public enum AOSR_FIELDS {
 

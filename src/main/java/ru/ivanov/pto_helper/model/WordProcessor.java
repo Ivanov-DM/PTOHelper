@@ -1,19 +1,15 @@
-package ru.ivanov.pto_helper;
+package ru.ivanov.pto_helper.model;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.xwpf.usermodel.*;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-
-import static ru.ivanov.pto_helper.WordFileTesting.arrConst;
 
 public class WordProcessor {
     private String templateFilePath;
@@ -32,12 +28,12 @@ public class WordProcessor {
     }
 
     // создаем готовый АОСР
-    public void createAOSR(int from, int to) throws IOException, InvalidFormatException {
+    public void createAOSR(int from, int to, String saveDirectoryPath) throws IOException, InvalidFormatException {
         for (int i = from; i <= to; i++) {
             AOSRContent aosrContent = aosrContenList.get(i);
             fillAOSR(aosrContent);
             String aosrNum = correctFileName(aosrContent.getAOSRNum());
-            String outFilePath = "AOSR_" + aosrNum + ".docx";
+            String outFilePath = saveDirectoryPath + "/AOSR_" + aosrNum + ".docx";
             out = new FileOutputStream(outFilePath);
             document.write(out);
             out.close();

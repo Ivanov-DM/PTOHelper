@@ -1,4 +1,4 @@
-package ru.ivanov.pto_helper;
+package ru.ivanov.pto_helper.model;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
