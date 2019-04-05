@@ -2,10 +2,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -24,7 +21,7 @@ public class Controller {
     TextField templatePathField, excelPathField, savePathField;
 
     @FXML
-    Label label;
+    Button selectBtn;
 
     @FXML
     VBox majorVbox;
@@ -64,6 +61,8 @@ public class Controller {
             getAOSRNumList();
             choiceBoxFrom.setItems(aosrChoiceData);
             choiceBoxTo.setItems(aosrChoiceData);
+            Main.mainFX.show();
+
         } catch (IOException e) {
             e.printStackTrace();
         }

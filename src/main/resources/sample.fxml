@@ -10,10 +10,10 @@
 <?import javafx.scene.control.TableView?>
 <VBox alignment="TOP_CENTER" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
     <VBox fx:id="majorVbox" alignment="TOP_CENTER">
-         <Label alignment="TOP_LEFT" prefWidth="Infinity" text="ОБЩИЙ ЖУРНАЛ РАБОТ:" textOverrun="CLIP"/>
+         <Label alignment="TOP_LEFT" prefWidth="Infinity" text="ОБЩИЙ ЖУРНАЛ РАБОТ:"/>
          <HBox>
                <TextField fx:id="excelPathField" minHeight="40.0" HBox.hgrow="ALWAYS" promptText="Выбрать файл ОЖР..." editable="false"/>
-               <Button mnemonicParsing="false" minHeight="40.0" minWidth="150.0" text="Выбрать" onAction="#selectExcelFile"/>
+               <Button fx:id="selectBtn" mnemonicParsing="false" minHeight="40.0" minWidth="150.0" text="Выбрать" onAction="#selectExcelFile"/>
          </HBox>
          <Label alignment="TOP_LEFT" prefWidth="Infinity" text="ПЕРЕЧЕНЬ АКТОВ, ГОТОВЫХ К ФОРМИРОВАНИЮ:"/>
         <TableView fx:id="tableView" minHeight="250.0"/>

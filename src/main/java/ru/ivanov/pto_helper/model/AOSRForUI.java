@@ -1,15 +1,18 @@
 package ru.ivanov.pto_helper.model;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 public class AOSRForUI {
 
     private Integer num;
-    private String aosrNum;
-    private String workName;
+    private StringProperty aosrNum;
+    private StringProperty workName;
 
     public AOSRForUI(Integer num, String aosrNum, String workName) {
         this.num = num;
-        this.aosrNum = aosrNum;
-        this.workName = workName;
+        this.aosrNum = new SimpleStringProperty(aosrNum);
+        this.workName =new SimpleStringProperty(workName);
     }
 
     public Integer getNum() {
@@ -21,19 +24,27 @@ public class AOSRForUI {
     }
 
     public String getAosrNum() {
+        return aosrNum.get();
+    }
+
+    public StringProperty aosrNumProperty() {
         return aosrNum;
     }
 
     public void setAosrNum(String aosrNum) {
-        this.aosrNum = aosrNum;
+        this.aosrNum.set(aosrNum);
     }
 
     public String getWorkName() {
+        return workName.get();
+    }
+
+    public StringProperty workNameProperty() {
         return workName;
     }
 
     public void setWorkName(String workName) {
-        this.workName = workName;
+        this.workName.set(workName);
     }
 }
 
