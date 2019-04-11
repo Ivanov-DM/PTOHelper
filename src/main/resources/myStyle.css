@@ -59,7 +59,7 @@
 }*/
 
  .table-row-cell{
-    -fx-background-color: grey;
+    -fx-background-color: #404040;
     -fx-background-insets: 0.0, 0.0 0.0 1.0 0.0;
     -fx-padding: 0.0em;
     -fx-text-fill: red;
@@ -67,13 +67,21 @@
 
 
 .table-row-cell:odd{
-    -fx-background-color: orange;
+    -fx-background-color: #303030;
     -fx-background-insets: 0.0, 0.0 0.0 1.0 0.0;
     -fx-padding: 0.0em;
     -fx-text-fill: red;
 }
 
-
+.table-row-cell:filled:selected {
+  -fx-background: -fx-control-inner-background ;
+  -fx-background-color: -fx-table-cell-border-color, -fx-background ;
+  -fx-background-insets: 0, 0 0 1 0 ;
+  -fx-table-cell-border-color: derive(-fx-color, 5%);
+}
+.table-row-cell:odd:filled:selected {
+  -fx-background: -fx-control-inner-background-alt ;
+}
 
 
 

@@ -28,9 +28,10 @@ public class WordProcessor {
     }
 
     // создаем готовый АОСР
-    public void createAOSR(int from, int to, String saveDirectoryPath) throws IOException, InvalidFormatException {
-        for (int i = from; i <= to; i++) {
-            AOSRContent aosrContent = aosrContenList.get(i);
+    public void createAOSR(ArrayList<Integer> aosrRange, String saveDirectoryPath) throws IOException, InvalidFormatException {
+        for (int i = 0; i < aosrRange.size(); i++) {
+            int numAOSR = aosrRange.get(i) - 1;
+            AOSRContent aosrContent = aosrContenList.get(numAOSR);
             fillAOSR(aosrContent);
             String aosrNum = correctFileName(aosrContent.getAOSRNum());
             String outFilePath = saveDirectoryPath + "/AOSR_" + aosrNum + ".docx";
@@ -127,17 +128,6 @@ public class WordProcessor {
         }
     }
 
-
-//        String currentText = run.getText(0);
-//        if (currentText != null && currentText.contains(word)) {
-//            currentText = currentText.replace(word, value);
-//            run.setText(currentText, 0);
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
-
     //изменение запрещенных для использования в имени Файла или каталога символов для Windows на символ _
     private String correctFileName(String name) {
         String correctedName = name;
@@ -154,7 +144,6 @@ public class WordProcessor {
         String filed;
         int row;
         int cell;
-
 
         // Внутренний класс для хранения информации о каждой ячейки таблицы шаблонного файла Word
         // информация - это номер строки и номер ячейки в этой строке

@@ -178,6 +178,36 @@ public class AOSRContent {
         return workName;
     }
 
+    public String getRDNum() {
+        String rdNum="";
+        for (Map.Entry<AOSR_FIELDS, ArrayList<String>> entry : aosrContentMap.entrySet()) {
+            if (AOSR_FIELDS.PROJECT_DATA == entry.getKey()) {
+                ArrayList<String> arr = entry.getValue();
+                for (String o : arr) {
+                    rdNum += o;
+                }
+                break;
+            }
+        }
+        StringBuffer sb = new StringBuffer();
+        int letter = sb.length();
+        String[] strInSplit = rdNum.split(",");
+        for (String o : strInSplit) {
+            if (o.contains("шифр проекта")) {
+                String strOut1 = o.replaceAll(" ", "");
+                String strOut2 = strOut1.replaceAll("шифрпроекта", "");
+                sb.append(strOut2 + ", ");
+                if (sb.indexOf("и") > 0) {
+                    int i = strOut2.indexOf('и') + letter;
+                    sb.insert(i, " ");
+                    letter =  sb.length();
+                }
+            }
+        }
+        sb.delete(sb.length() - 2, sb.length());
+        return sb.toString();
+    }
+
     private String[] cleanStringArr(String[] arr) {
         ArrayList<String> cleandArr = new ArrayList<>();
         for (String str : arr) {

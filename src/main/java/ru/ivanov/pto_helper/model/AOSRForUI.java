@@ -7,10 +7,12 @@ public class AOSRForUI {
 
     private Integer num;
     private StringProperty aosrNum;
+    private StringProperty rdNum;
     private StringProperty workName;
 
-    public AOSRForUI(Integer num, String aosrNum, String workName) {
+    public AOSRForUI(Integer num, String aosrNum, String rdNum, String workName) {
         this.num = num;
+        this.rdNum = new SimpleStringProperty(rdNum);
         this.aosrNum = new SimpleStringProperty(aosrNum);
         this.workName =new SimpleStringProperty(workName);
     }
@@ -21,6 +23,18 @@ public class AOSRForUI {
 
     public void setNum(Integer num) {
         this.num = num;
+    }
+
+    public String getRDNum() {
+        return rdNum.get();
+    }
+
+    public StringProperty rdNumProperty() {
+        return rdNum;
+    }
+
+    public void setRDNum(String rdNum) {
+        this.rdNum.set(rdNum);
     }
 
     public String getAosrNum() {
@@ -47,4 +61,3 @@ public class AOSRForUI {
         this.workName.set(workName);
     }
 }
-
