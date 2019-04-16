@@ -1,13 +1,13 @@
 #majorVbox {
-    -fx-background-color: #303030;
+    -fx-background-color: #353535;
     -fx-font-family: "Segoe UI Semibold";
 }
 
 .label {
-    -fx-font-size: 14pt;
+    -fx-font-size: 12pt;
     -fx-font-family: "Segoe UI Semibold";
     -fx-text-fill: white;
-    -fx-opacity: 0.5;
+    -fx-opacity: 0.6;
 }
 
 .choice-box {
@@ -15,6 +15,22 @@
     -fx-font-size: 12pt;
     -fx-font-family: "Segoe UI Semibold";
     -fx-text-fill: white;
+}
+
+.choice-box .context-menu {
+    -fx-background-color: #232323;
+    -fx-font-size: 12pt;
+    -fx-font-family: "Segoe UI Semibold";
+    -fx-text-fill: white;
+}
+
+
+
+.check-box .box {
+    -fx-background-color: #232323;
+}
+
+.check-box .mark {
 }
 
 .table-view {
@@ -43,7 +59,7 @@
 }
 
  .table-view .column-header .label {
-     -fx-font-size: 14pt;
+     -fx-font-size: 10pt;
      /*-fx-font-family: "Segoe UI Light";
      -fx-text-fill: white;
      -fx-alignment: center;
@@ -59,7 +75,7 @@
 }*/
 
  .table-row-cell{
-    -fx-background-color: #404040;
+    -fx-background-color: #232323;
     -fx-background-insets: 0.0, 0.0 0.0 1.0 0.0;
     -fx-padding: 0.0em;
     -fx-text-fill: red;
@@ -67,7 +83,7 @@
 
 
 .table-row-cell:odd{
-    -fx-background-color: #303030;
+    -fx-background-color: #272727;
     -fx-background-insets: 0.0, 0.0 0.0 1.0 0.0;
     -fx-padding: 0.0em;
     -fx-text-fill: red;
@@ -84,7 +100,6 @@
 }
 
 
-
 .text-field {
     -fx-background-color: #232323;
     -fx-font-size: 12pt;
@@ -92,6 +107,7 @@
     -fx-text-fill: white;
     -fx-prompt-text-fill: #505050;
 }
+
 
 /*
  * Push Button в стиле Metro

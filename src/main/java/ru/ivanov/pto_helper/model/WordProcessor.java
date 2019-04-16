@@ -20,7 +20,7 @@ public class WordProcessor {
     FileOutputStream out;
 
 
-    public WordProcessor(String templateFilePath, ArrayList<AOSRContent> aosrContenList) throws InvalidFormatException, IOException {
+    public WordProcessor(String templateFilePath, ArrayList<AOSRContent> aosrContenList) throws InvalidFormatException, IOException, RuntimeException {
         this.templateFilePath = templateFilePath;
         this.aosrContenList = aosrContenList;
         document = new XWPFDocument(OPCPackage.open(templateFilePath));
@@ -46,7 +46,7 @@ public class WordProcessor {
     // Value - это ArrayList с информацией о ячейках таблицы, в которых находится указанное поле,
     // информация о ячейке - это номер строки и номер ячейки в этой строке
 
-    private void initMapCellAndRowFields() {
+    private void initMapCellAndRowFields() throws RuntimeException {
         mapCellAndRowFields = new LinkedHashMap<>(32);
         for (AOSR_FIELDS fields : AOSR_FIELDS.values()) {
             ArrayList<DocumentTableCell> arrCells = new ArrayList<>();
@@ -69,6 +69,9 @@ public class WordProcessor {
                 }
                 mapCellAndRowFields.put(fields, arrCells);
             }
+        }
+        if (mapCellAndRowFields.isEmpty()) {
+            throw new RuntimeException();
         }
     }
 
@@ -117,7 +120,7 @@ public class WordProcessor {
                 for (XWPFRun run : paragraph.getRuns()) {
                     String currentText = run.getText(0);
                     if (currentText != null) {
-                        if(replacementVelue.equals("пусто")|| replacementVelue.equals("Пусто")) {
+                        if(replacementVelue.equals("пусто") || replacementVelue.equals("Пусто")) {
                             replacementVelue = "";
                         }
                         currentText = currentText.replace(currentText, replacementVelue);

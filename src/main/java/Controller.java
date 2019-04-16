@@ -6,7 +6,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -20,6 +24,7 @@ import ru.ivanov.pto_helper.model.AOSRForUI;
 import ru.ivanov.pto_helper.model.ExcelParser;
 import ru.ivanov.pto_helper.model.WordProcessor;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -47,7 +52,16 @@ public class Controller {
     TableColumn<AOSRForUI, Integer> numColumn;
 
     @FXML
-    TableColumn<AOSRForUI, String> aosrNumColumn, rdNumColumn, workNameColumn;
+    TableColumn<AOSRForUI, String> aosrNumColumn, rdNumColumn, workNameColumn, dateColumn;
+
+    @FXML
+    CheckBox checkFilter;
+
+    @FXML
+    ChoiceBox<String> choiceFilter;
+
+    @FXML
+    HBox filterHBox;
 
     String saveDirectoryPath;
     String templateFilePath;
@@ -55,6 +69,7 @@ public class Controller {
     ArrayList<AOSRContent> aosrContenList = new ArrayList<>();
     private ObservableList<AOSRForUI> masterTableData = FXCollections.observableArrayList();
     private ObservableList<AOSRForUI> filteredTableData = FXCollections.observableArrayList();
+    private ObservableList<String> choiceFilterData = FXCollections.observableArrayList();
 
     @FXML
     private void initialize() {
@@ -63,15 +78,43 @@ public class Controller {
 
         // Колонка порядковый номер акта в таблице
         numColumn.setCellValueFactory(new PropertyValueFactory<AOSRForUI, Integer>("num"));
-        numColumn.setStyle("-fx-alignment: CENTER;");
+        numColumn.setStyle("-fx-alignment: CENTER; -fx-font-size: 10pt;");
 
         // Колонка номер акта
         aosrNumColumn.setCellValueFactory(new PropertyValueFactory<AOSRForUI, String>("aosrNum"));
-        aosrNumColumn.setStyle("-fx-alignment: CENTER;");
+        aosrNumColumn.setStyle("-fx-alignment: CENTER; -fx-font-size: 10pt;");
+
+        // Колонка дата акта
+        dateColumn.setCellValueFactory(new PropertyValueFactory<AOSRForUI, String>("date"));
+//        dateColumn.setStyle("-fx-alignment: CENTER; -fx-font-size: 10pt;");
+        dateColumn.setCellFactory(new Callback<TableColumn<AOSRForUI, String>, TableCell<AOSRForUI, String>>() {
+            @Override
+            public TableCell<AOSRForUI, String> call(
+                    TableColumn<AOSRForUI, String> param) {
+                TableCell<AOSRForUI, String> cell = new TableCell<AOSRForUI, String>() {
+
+                    @Override
+                    public void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        Text text = new Text();
+                        text.setFont(Font.font("Segoe UI Semibold",14));
+                        text.setFill(Color.WHITE);
+                        setGraphic(text);
+                        setPrefHeight(Control.USE_COMPUTED_SIZE);
+                        text.wrappingWidthProperty().bind(this.widthProperty());
+                        text.textProperty().bind(this.itemProperty());
+                        getStylesheets().clear();
+                        setStyle("-fx-text-fill: white; -fx-alignment: center; -fx-font-size: 10pt;");
+                        setText(item);
+                    }
+                };
+                return cell ;
+            }
+        });
 
         // Колонка шифр РД
         rdNumColumn.setCellValueFactory(new PropertyValueFactory<AOSRForUI, String>("rdNum"));
-        rdNumColumn.setStyle("-fx-alignment: CENTER;");
+//        rdNumColumn.setStyle("-fx-alignment: CENTER; -fx-font-size: 10pt;");
         rdNumColumn.setCellFactory(new Callback<TableColumn<AOSRForUI, String>, TableCell<AOSRForUI, String>>() {
             @Override
             public TableCell<AOSRForUI, String> call(
@@ -89,7 +132,7 @@ public class Controller {
                         text.wrappingWidthProperty().bind(this.widthProperty());
                         text.textProperty().bind(this.itemProperty());
                         getStylesheets().clear();
-                        setStyle("-fx-text-fill: white; -fx-alignment: center;");
+                        setStyle("-fx-text-fill: white; -fx-alignment: center; -fx-font-size: 10pt;");
                         setText(item);
                     }
                 };
@@ -117,7 +160,7 @@ public class Controller {
                         text.wrappingWidthProperty().bind(this.widthProperty());
                         text.textProperty().bind(this.itemProperty());
                         getStylesheets().clear();
-                        setStyle("-fx-text-fill: white; -fx-alignment:");
+                        setStyle("-fx-text-fill: white; -fx-font-size: 10pt;");
                             setText(item);
                     }
                 };
@@ -127,29 +170,37 @@ public class Controller {
 
         tableView.setColumnResizePolicy( TableView.CONSTRAINED_RESIZE_POLICY );
         numColumn.setMaxWidth(1f * Integer.MAX_VALUE * 5); // 5% width
-        aosrNumColumn.setMaxWidth(1f * Integer.MAX_VALUE * 20); // 20% width
-        rdNumColumn.setMaxWidth(1f * Integer.MAX_VALUE * 25); // 25% width
-        workNameColumn.setMaxWidth(1f * Integer.MAX_VALUE * 50); // 50% width
+        aosrNumColumn.setMaxWidth(1f * Integer.MAX_VALUE * 15); // 20% width
+        dateColumn.setMaxWidth(1f * Integer.MAX_VALUE * 12); // 20% width
+        rdNumColumn.setMaxWidth(1f * Integer.MAX_VALUE * 20); // 25% width
+        workNameColumn.setMaxWidth(1f * Integer.MAX_VALUE * 48); // 50% width
 
 //        Tooltip tooltip = new Tooltip();
 //        tooltip.setText("Введите номера или диапазоны актов, разделенные запятыми");
 //        tipLabel.setTooltip(tooltip);
 
-        majorVbox.setPadding(new Insets(30, 40, 30, 40));
-        majorVbox.setSpacing(20);
+        majorVbox.setPadding(new Insets(20,30,20,30));
+        majorVbox.setSpacing(10);
+        filterHBox.setSpacing(10);
 
         filterField.textProperty().addListener(new ChangeListener<String>() {
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 updateFilteredTableData();
             }
         });
+
+        for (TableColumn o : tableView.getColumns()) {
+            choiceFilterData.add(o.getText());
+        }
+        choiceFilter.setItems(choiceFilterData);
+        choiceFilter.setValue(choiceFilterData.get(1));
     }
 
     @FXML
     private void prepareTableDataset(){
         for (int i = 0; i < aosrContenList.size(); i++) {
             AOSRContent ac = aosrContenList.get(i);
-            masterTableData.add(new AOSRForUI(i + 1, ac.getAOSRNum(), ac.getRDNum(), ac.getWorkName()));
+            masterTableData.add(new AOSRForUI(i + 1, ac.getAOSRNum(), ac.getAOSRDate(), ac.getRDNum(), ac.getWorkName()));
         }
         filteredTableData.addAll(masterTableData);
         tableView.setItems(filteredTableData);
@@ -167,12 +218,32 @@ public class Controller {
 
     private boolean matchesFilter(AOSRForUI aosr) {
         String filterString = filterField.getText();
+        String filterFieldName = choiceFilter.getValue();
         if (filterString == null || filterString.length() == 0) {
             return true;
         }
         String lowerCaseFilterString = filterString.toLowerCase();
-        if (aosr.getRDNum().toLowerCase().indexOf(lowerCaseFilterString) != -1) {
-            return true;
+        switch (filterFieldName) {
+            case "№ АОСР":
+                if (aosr.getAosrNum().toLowerCase().indexOf(lowerCaseFilterString) != -1) {
+                    return true;
+                }
+                return false;
+            case "ДАТА":
+                if (aosr.getDate().toLowerCase().indexOf(lowerCaseFilterString) != -1) {
+                    return true;
+                }
+                return false;
+            case "ШИФР РД":
+                if (aosr.getRDNum().toLowerCase().indexOf(lowerCaseFilterString) != -1) {
+                    return true;
+                }
+                return false;
+            case "НАИМЕНОВАНИЕ РАБОТ":
+                if (aosr.getWorkName().toLowerCase().indexOf(lowerCaseFilterString) != -1) {
+                    return true;
+                }
+                return false;
         }
         return false;
     }
@@ -188,23 +259,25 @@ public class Controller {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Выбрать файл ОЖР");
         File file = fileChooser.showOpenDialog(Main.mainFX);
-        excelFilePath = file.getAbsolutePath();
-        excelPathField.setText(file.getAbsolutePath());
         try {
+            excelFilePath = file.getAbsolutePath();
+            excelPathField.setText(file.getAbsolutePath());
             ExcelParser excelParser = new ExcelParser(excelFilePath);
-            aosrContenList = excelParser.getAOSRContentListNew();
+            aosrContenList = excelParser.getAOSRContentList();
             if (aosrContenList.isEmpty()) {
-                Alert aosrContentAlert = new Alert(Alert.AlertType.INFORMATION);
-                aosrContentAlert.setHeaderText("Ошибка");
-                aosrContentAlert.setContentText("PTO Helper не удается распознать файл " + excelFilePath + '\n'
-                                                + "Выберите правильный файл!");
-                aosrContentAlert.showAndWait();
             } else {
                 prepareTableDataset();
             }
-        } catch (IOException e) {
-            System.out.println("Wrong excel file");
-            e.printStackTrace();
+        } catch (Exception e) {
+            Alert aosrContentAlert = new Alert(Alert.AlertType.INFORMATION);
+            aosrContentAlert.setHeaderText("Внимание");
+            if (excelFilePath == null) {
+                aosrContentAlert.setContentText("Вы не выбрали файл ОЖР!");
+            } else {
+                aosrContentAlert.setContentText("PTO Helper не удается распознать файл " + excelFilePath + '\n'
+                        + "Выберите правильный файл!");
+            }
+            aosrContentAlert.showAndWait();
         }
     }
 
@@ -251,12 +324,18 @@ public class Controller {
                     saveDirectoryAlert.showAndWait();
                 } else {
                     wordProcessor.createAOSR(getAosrRange(), saveDirectoryPath);
+                    openDirectory(saveDirectoryPath);
                 }
             }
         } catch (InvalidFormatException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (RuntimeException e) {
+            Alert templateFileAlert = new Alert(Alert.AlertType.INFORMATION);
+            templateFileAlert.setHeaderText("Ошибка");
+            templateFileAlert.setContentText("PTO-Helper не может заполнить выбранный файл шаблона АОСР," + '\n' + "Выберите правильный файл");
+            templateFileAlert.showAndWait();
         }
     }
 
@@ -284,5 +363,27 @@ public class Controller {
             }
         }
         return arr;
+    }
+
+    public void activeFilter(ActionEvent actionEvent) {
+        if (checkFilter.isSelected()){
+            filterField.setVisible(true);
+            choiceFilter.setVisible(true);
+        } else {
+            filterField.setVisible(false);
+            choiceFilter.setVisible(false);
+        }
+    }
+
+    private void openDirectory(String directoryPath) {
+        Desktop desktop = null;
+        if (Desktop.isDesktopSupported()) {
+            desktop = Desktop.getDesktop();
+        }
+        try{
+            desktop.open(new File(directoryPath));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

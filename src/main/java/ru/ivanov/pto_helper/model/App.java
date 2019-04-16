@@ -21,7 +21,7 @@ public class App {
 
         //Создаем экземпляр WordProcessor и передаем ему путь к файлу Word (шаблон АОСР) и сформированный массив
         // данных AOSRContent, который получаем в результате чтения ExcelParser файла Excel
-        WordProcessor wordProcessor = new WordProcessor(TEMPLANE_FILE_NAME, excelParser.getAOSRContentListNew());
+        WordProcessor wordProcessor = new WordProcessor(TEMPLANE_FILE_NAME, excelParser.getAOSRContentList());
 
 
 

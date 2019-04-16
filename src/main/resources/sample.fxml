@@ -8,6 +8,8 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TableColumn?>
 
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
 <VBox alignment="TOP_CENTER" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
     <VBox fx:id="majorVbox" alignment="TOP_CENTER" VBox.vgrow="ALWAYS">
          <Label alignment="TOP_LEFT" prefWidth="Infinity" text="ОБЩИЙ ЖУРНАЛ РАБОТ:"/>
@@ -16,20 +18,23 @@
                <Button fx:id="selectBtn" mnemonicParsing="false" minHeight="40.0" minWidth="150.0" text="Выбрать" onAction="#selectExcelFile"/>
          </HBox>
          <Label alignment="TOP_LEFT" prefWidth="Infinity" text="ПЕРЕЧЕНЬ АКТОВ, ГОТОВЫХ К ФОРМИРОВАНИЮ:"/>
-        <TableView fx:id="tableView" minHeight="250.0" VBox.vgrow="ALWAYS">
+        <TableView fx:id="tableView" minHeight="100.0" VBox.vgrow="ALWAYS">
             <columns>
                 <TableColumn fx:id="numColumn" text="№ п/п"/>
                 <TableColumn fx:id="aosrNumColumn" text="№ АОСР"/>
+                <TableColumn fx:id="dateColumn" text="ДАТА"/>
                 <TableColumn fx:id="rdNumColumn" text="ШИФР РД"/>
                 <TableColumn fx:id="workNameColumn" text="НАИМЕНОВАНИЕ РАБОТ"/>
             </columns>
         </TableView>
-        <HBox>
-            <Label contentDisplay="CENTER" minWidth="310.0" text="ПОКАЗАТЬ АКТЫ ПО СООТВЕТСТВУЮЩЕМУ ШИФРУ РД:   "/>
-            <TextField fx:id="filterField" minHeight="40.0" HBox.hgrow="ALWAYS" promptText="Укажите шифр РД..."/>
+        <HBox fx:id="filterHBox">
+            <CheckBox fx:id="checkFilter" minWidth="15.0" onAction="#activeFilter"/>
+            <Label contentDisplay="CENTER" minWidth="150.0" text="ДОБАВИТЬ ФИЛЬТР"/>
+            <ChoiceBox fx:id="choiceFilter" minWidth="15" visible="false"/>
+            <TextField fx:id="filterField" minHeight="40.0" HBox.hgrow="ALWAYS" promptText="Укажите шифр РД..." visible="false"/>
         </HBox>
          <HBox fx:id="hBoxRange">
-               <Label contentDisplay="CENTER" minWidth="240.0" text="СФОРМИРОВАТЬ АКТЫ:"/>
+               <Label contentDisplay="CENTER" minWidth="200.0" text="НОМЕРА АКТОВ:"/>
                <TextField fx:id="textFieldAOSRRange" minWidth="150.0" HBox.hgrow="ALWAYS" promptText="Введите номера или диапозоны актов, разделенные запятыми..."/>
              <!--<Label fx:id="tipLabel" contentDisplay="RIGHT" minWidth="20.0" text="   / ? /"/>-->
          </HBox>
@@ -38,7 +43,7 @@
             <TextField fx:id="templatePathField" minHeight="40.0" HBox.hgrow="ALWAYS" promptText="Выберите файл шаблона АОСР..." editable="false"/>
             <Button mnemonicParsing="false" minHeight="40.0" minWidth="150.0" text="Выбрать" onAction="#selectTemplateFile"/>
         </HBox>
-         <Label prefWidth="Infinity" text="ПАПКУ ДЛЯ СОХРАНЕНИЯ АКТОВ:"/>
+         <Label prefWidth="Infinity" text="ПАПКА ДЛЯ СОХРАНЕНИЯ АКТОВ:"/>
          <HBox>
                <TextField fx:id="savePathField" minHeight="40.0" HBox.hgrow="ALWAYS" promptText="Выберите папку ..." editable="false"/>
                <Button mnemonicParsing="false" minHeight="40.0" minWidth="150.0" text="Выбрать" onAction="#selectSaveDirectory"/>

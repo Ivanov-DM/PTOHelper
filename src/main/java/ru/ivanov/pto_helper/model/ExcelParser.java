@@ -40,71 +40,60 @@ public class ExcelParser {
         }
     }
 
-    // возвращает список объектов класса AOSRContent (только тех, которые в excel файле имеют статус ЛОЖЬ в графе isEmpty)
-    public ArrayList<AOSRContent> getAOSRContentList() {
-        ArrayList<AOSRContent> aosrContentList = new ArrayList<>(32);
-        boolean aosrIsReady = false;
-        XSSFSheet sheet = book.getSheetAt(0);
-        Iterator<Row> rowIterator = sheet.rowIterator();
-        while(rowIterator.hasNext()) {
-            Row row = rowIterator.next();
-            if (row.getRowNum() > 2) {
-                Iterator<Cell> cellIterator = row.cellIterator();
-                AOSRContent aosrContent = new AOSRContent();
-                while (cellIterator.hasNext()) {
-                    Cell cell = cellIterator.next();
-                    if (cell.getCellType() == CellType.FORMULA) {
-                        aosrIsReady = !cell.getBooleanCellValue(); //отрицание потому то в Excel файле если данные для акта готовы то ЛОЖЬ
-                        if (aosrIsReady) {
-                            aosrContent.isReady = aosrIsReady;
-                            continue;
-                        }
-                    }
-                    if (aosrIsReady) {
-                        if (cell.getCellType() == CellType.STRING) {
-                            for (Map.Entry entry : mapFieldsColumns.entrySet()) {
-                                int numColumn = (int) entry.getValue();
-                                if (cell.getColumnIndex() == numColumn) {
-                                    aosrContent.addValue(cell.getStringCellValue(), (AOSR_FIELDS) entry.getKey());
-                                    break;
-                                }
-                            }
-                        } else if (cell.getCellType() == CellType.NUMERIC) {
-                            int cellColumnNum = cell.getColumnIndex();
-                            if (cellColumnNum == 1) {
-                                int num = (int) cell.getNumericCellValue();
-                                aosrContent.aosrNum = num;
-                            } else {
-                                for (Map.Entry entry : mapFieldsColumns.entrySet()) {
-                                    int numColumn = (int) entry.getValue();
-                                    if (cell.getColumnIndex() == numColumn) {
-                                        aosrContent.addValue(cell.getNumericCellValue(), (AOSR_FIELDS) entry.getKey());
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                aosrContentList.add(aosrContent);
-            }
-        }
-        return aosrContentList;
-    }
-
-
-
-
-
-
-
-
-
-
-
+//    // возвращает список объектов класса AOSRContent (только тех, которые в excel файле имеют статус ЛОЖЬ в графе isEmpty)
+//    public ArrayList<AOSRContent> getAOSRContentList() {
+//        ArrayList<AOSRContent> aosrContentList = new ArrayList<>(32);
+//        boolean aosrIsReady = false;
+//        XSSFSheet sheet = book.getSheetAt(0);
+//        Iterator<Row> rowIterator = sheet.rowIterator();
+//        while(rowIterator.hasNext()) {
+//            Row row = rowIterator.next();
+//            if (row.getRowNum() > 2) {
+//                Iterator<Cell> cellIterator = row.cellIterator();
+//                AOSRContent aosrContent = new AOSRContent();
+//                while (cellIterator.hasNext()) {
+//                    Cell cell = cellIterator.next();
+//                    if (cell.getCellType() == CellType.FORMULA) {
+//                        aosrIsReady = !cell.getBooleanCellValue(); //отрицание потому то в Excel файле если данные для акта готовы то ЛОЖЬ
+//                        if (aosrIsReady) {
+//                            aosrContent.isReady = aosrIsReady;
+//                            continue;
+//                        }
+//                    }
+//                    if (aosrIsReady) {
+//                        if (cell.getCellType() == CellType.STRING) {
+//                            for (Map.Entry entry : mapFieldsColumns.entrySet()) {
+//                                int numColumn = (int) entry.getValue();
+//                                if (cell.getColumnIndex() == numColumn) {
+//                                    aosrContent.addValue(cell.getStringCellValue(), (AOSR_FIELDS) entry.getKey());
+//                                    break;
+//                                }
+//                            }
+//                        } else if (cell.getCellType() == CellType.NUMERIC) {
+//                            int cellColumnNum = cell.getColumnIndex();
+//                            if (cellColumnNum == 1) {
+//                                int num = (int) cell.getNumericCellValue();
+//                                aosrContent.aosrNum = num;
+//                            } else {
+//                                for (Map.Entry entry : mapFieldsColumns.entrySet()) {
+//                                    int numColumn = (int) entry.getValue();
+//                                    if (cell.getColumnIndex() == numColumn) {
+//                                        aosrContent.addValue(cell.getNumericCellValue(), (AOSR_FIELDS) entry.getKey());
+//                                        break;
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//                aosrContentList.add(aosrContent);
+//            }
+//        }
+//        return aosrContentList;
+//    }
 
     // возвращает список объектов класса AOSRContent (только тех, которые в excel файле имеют статус ЛОЖЬ в графе isEmpty)
-    public ArrayList<AOSRContent> getAOSRContentListNew() {
+    public ArrayList<AOSRContent> getAOSRContentList() throws RuntimeException {
         ArrayList<AOSRContent> aosrContentList = new ArrayList<>(32);
         AOSRContentCreator aosrContentCreator = new AOSRContentCreator();
         XSSFSheet sheet = book.getSheetAt(0);
@@ -126,11 +115,9 @@ public class ExcelParser {
                 }
             }
         }
+        if (aosrContentList.isEmpty()) {
+            throw new RuntimeException();
+        }
         return aosrContentList;
     }
-
-
-
-
-
 }

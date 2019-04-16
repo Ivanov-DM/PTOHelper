@@ -4,6 +4,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.awt.*;
+
 public class Main extends Application {
     public static Stage mainFX;
 
@@ -14,7 +16,13 @@ public class Main extends Application {
         final Controller controller = (Controller)loader.getController();
         primaryStage.setTitle("PTO-Helper");
         mainFX = primaryStage;
-        Scene scene = new Scene(root, 1200, 1000);
+        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        int width = gd.getDisplayMode().getWidth();
+        int height = gd.getDisplayMode().getHeight();
+
+        primaryStage.setMinWidth(width * 0.8);
+        primaryStage.setMinHeight(height * 0.7);
+        Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("myStyle.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.show();
