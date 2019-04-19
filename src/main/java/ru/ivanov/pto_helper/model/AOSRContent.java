@@ -67,7 +67,6 @@ public class AOSRContent {
                     isNext = false;
                     attachmentBuilder.append(builderMaterial.toString());
                     attachmentBuilder.append(" ");
-//                    System.out.println(builderMaterial);
                     builderMaterial.setLength(0);
                 }
             }
@@ -111,7 +110,7 @@ public class AOSRContent {
     }
 
     //
-    private void putValue(String text, AOSR_FIELDS currentField) {
+    protected void putValue(String text, AOSR_FIELDS currentField) {
         ArrayList<String> resultStringArray = new ArrayList<>();
         String str = text.replaceAll("\\s+", " ");
         for (AOSR_FIELDS field : AOSR_FIELDS.values()) {
@@ -145,16 +144,43 @@ public class AOSRContent {
                     }
 
                     resultStringArray.add(sb.toString());
-//                    for (String o : resultStringArray) {
-//                        System.out.println(o.length());
-//                        System.out.println(o);
-//                    }
                     aosrContentMap.put(currentField, resultStringArray);
                     break;
                 }
             }
         }
     }
+
+    protected void addAttachmenetValue(String text, AOSR_FIELDS field) {
+        ArrayList<String> resultStringArray = aosrContentMap.get(field);
+        String str = text.replaceAll("\\s+", " ");
+        StringBuffer sb = new StringBuffer();
+        String[] arrStringLine = str.split(" ");
+        String currentWord = arrStringLine[0];
+        String endOfLineWord = null;
+        int maxLineSize = field.getFirstRowLength();
+        for (int i = 1; i <= arrStringLine.length; i++) {
+            sb.append(currentWord + " ");
+            if (sb.length() < maxLineSize) {
+                if (i < arrStringLine.length) {
+                    currentWord = arrStringLine[i];
+                    endOfLineWord = currentWord;
+                } else {
+                    sb.delete(sb.length() - 1, sb.length());
+                }
+            } else {
+                maxLineSize = field.getNextRowLength();
+                sb.delete(sb.length() - endOfLineWord.length() - 2, sb.length());
+                resultStringArray.add(sb.toString());
+                sb.setLength(0);
+                i--;
+            }
+        }
+
+        resultStringArray.add(sb.toString());
+        aosrContentMap.put(field, resultStringArray);
+    }
+
 
     public String getAOSRNum() {
         String aosrNum = "";
@@ -243,6 +269,26 @@ public class AOSRContent {
             }
         }
         return aosrDate.toString();
+    }
+
+    public String getAOSRDateEndWork() {
+        StringBuffer aosrDateEndWork = new StringBuffer();
+        for (Map.Entry<AOSR_FIELDS, ArrayList<String>> entry : aosrContentMap.entrySet()) {
+            if (AOSR_FIELDS.DEW == entry.getKey()) {
+                aosrDateEndWork.append(entry.getValue().get(0) + " ");
+                continue;
+            }
+            if (AOSR_FIELDS.MEW == entry.getKey()) {
+                aosrDateEndWork.append(entry.getValue().get(0) + " ");
+                continue;
+            }
+            if (AOSR_FIELDS.YEW == entry.getKey()) {
+                aosrDateEndWork.append(entry.getValue().get(0));
+                continue;
+            }
+        }
+        aosrDateEndWork.append("г.");
+        return aosrDateEndWork.toString();
     }
 
     private String[] cleanStringArr(String[] arr) {

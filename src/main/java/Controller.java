@@ -332,6 +332,7 @@ public class Controller {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (RuntimeException e) {
+            e.printStackTrace();
             Alert templateFileAlert = new Alert(Alert.AlertType.INFORMATION);
             templateFileAlert.setHeaderText("Ошибка");
             templateFileAlert.setContentText("PTO-Helper не может заполнить выбранный файл шаблона АОСР," + '\n' + "Выберите правильный файл");

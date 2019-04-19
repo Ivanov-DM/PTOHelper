@@ -7,7 +7,7 @@ public enum AOSR_FIELDS {
     YEW(5, 0),                                         //3  YAER OF END WORK     год окончания работ
     WORK_TYPE(60, 124),                                //4                       наименование работ
     PROJECT_DATA(71, 124),                             //5                       наименование проекта
-    MATERIAL_DATA(84, 124),                            //6                       наименование применяемых материалов
+    MATERIAL_DATA(78, 124),                            //6                       наименование применяемых материалов
     DRAWING_AND_RESULTS(124, 124),                     //7                       исполнительные чертежи и результаты испытаний
     DSW(5, 0),                                         //8  DAY OF START WORK    день начал работ
     MSW(12, 0),                                        //9 MONTH OF START WORK  месяц начал работ
